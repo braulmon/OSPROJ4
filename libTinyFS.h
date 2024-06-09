@@ -64,4 +64,5 @@ int tfs_writeByte(fileDescriptor FD, int offset, unsigned int data);
 int tfs_readFileInfo(fileDescriptor FD);
 int tfs_rename(fileDescriptor FD, char* newName);
 int tfs_readdir();
+
 #endif // LIBTINYFS_H
