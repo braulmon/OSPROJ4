@@ -1,16 +1,16 @@
 CC = gcc
 CFLAGS = -Wall -g
-PROG = diskTest
-OBJS = diskTest.o libDisk.o
+PROG = tinyFSDemo
+OBJS = tinyFSDemo.o libTinyFS.o libDisk.o
 
 $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) -o $(PROG) $(OBJS)
 
-diskTest.o: diskTest.c libDisk.h
-	$(CC) $(CFLAGS) -c diskTest.c
+tinyFsDemo.o: tinyFSDemo.c libTinyFS.h TinyFS_errno.h
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-libDisk.o: libDisk.c libDisk.h
-	$(CC) $(CFLAGS) -c libDisk.c
+libTinyFS.o: libTinyFS.c libTinyFS.h libDisk.h libDisk.o TinyFS_errno.h
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-clean:
-	rm -f $(PROG) $(OBJS)
+libDisk.o: libDisk.c libDisk.h TinyFS_errno.h
+	$(CC) $(CFLAGS) -c -o $@ $<

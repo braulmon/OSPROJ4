@@ -1,13 +1,14 @@
 #include "libDisk.h"
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdio.h>
 
 int openDisk(char *filename, int nBytes) {
     int new_nBytes;
     int disk = -1; // default file open failure value
 
     if (nBytes < BLOCKSIZE && nBytes != 0) {
-        perror("Line 10 error failure: openDisk");
+        printf("Line 10 error failure: openDisk\n");
         return -1;
     } else if (nBytes % BLOCKSIZE != 0) {
         new_nBytes = (nBytes / BLOCKSIZE) * BLOCKSIZE; // closest multiple to BLOCKSIZE < nBytes
@@ -23,7 +24,7 @@ int openDisk(char *filename, int nBytes) {
     }
 
     if (disk < 0) {
-        perror("File Open failure: openDisk")
+        printf("File Open failure: openDisk\n");
         return -1; // file open failure
     }
     
@@ -32,7 +33,7 @@ int openDisk(char *filename, int nBytes) {
         int sizeSet = ftruncate(disk, new_nBytes);
         if (sizeSet != 0) {
             closeDisk(disk);
-            perror("size set failure: openDisk")
+            printf("size set failure: openDisk\n");
             return -1;
         }
     }
@@ -48,14 +49,14 @@ int readBlock(int disk, int bNum, void *block) {
     off_t offset = bNum * BLOCKSIZE;
     off_t diskOffset = lseek(disk, offset, SEEK_SET);
 
-    if (diskOffset < 0) 
-        perror("Disk Offset Error: readBlock"){
+    if (diskOffset < 0) {
+        printf("Disk Offset Error: readBlock\n");
         return -1;
     }
 
     ssize_t bytesRead = read(disk, block, BLOCKSIZE);
     if (bytesRead < 0 || bytesRead != BLOCKSIZE) {
-        perror("Cannot read block: readBlock");
+        printf("Cannot read block: readBlock\n");
         return -1; // unable to read
     }
 
@@ -67,15 +68,16 @@ int writeBlock(int disk, int bNum, void *block) {
     off_t diskOffset = lseek(disk, blockOffset, SEEK_SET);
 
     if (diskOffset < 0) {
-        perror("Disk Offset Error: writeBlock");
+        printf("Disk Offset Error: writeBlock\n");
         return -1;
     }
 
     ssize_t bytesWritten = write(disk, block, BLOCKSIZE);
     if (bytesWritten != BLOCKSIZE) {
-        perror("Cannot write block: writeBlock");
+        printf("Cannot write block: writeBlock\n");
         return -1; // unable to write
     }
 
     return 0; // written
 }
+
